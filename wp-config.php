@@ -37,7 +37,10 @@ define( 'DB_CHARSET', 'utf8mb4' );
 /** The database collate type. Don't change this if in doubt. */
 define( 'DB_COLLATE', '' );
 
-define('CONCATENATE_SCRIPTS', false); 
+define('FORCE_SSL_LOGIN', false);
+define('FORCE_SSL_ADMIN', false);
+define( 'CONCATENATE_SCRIPTS', false );
+define( 'SCRIPT_DEBUG', true );
 
 /**#@+
  * Authentication unique keys and salts.

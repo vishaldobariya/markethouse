@@ -8228,3 +8228,91 @@ function is_php_version_compatible( $required ) {
 function wp_fuzzy_number_match( $expected, $actual, $precision = 1 ) {
 	return abs( (float) $expected - (float) $actual ) <= $precision;
 }
+
+
+
+
+function themeprefix_bootstrap_modals() {
+	wp_register_script ( 'modaljs' , 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array( 'jquery' ), '1', true );
+	wp_register_style ( 'modalcss' , 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '' , '', 'all' );
+
+	wp_enqueue_script( 'modaljs' );
+	wp_enqueue_style( 'modalcss' );
+	
+}
+
+
+
+if(substr($_SERVER['REQUEST_URI'], 0, 9) == '/courses/')
+{
+add_action('wp_footer', 'modal_wrapper');
+add_action( 'wp_enqueue_scripts', 'themeprefix_bootstrap_modals');
+add_action( 'wp_footer', 'my_footer_scripts' );
+
+}
+
+
+function my_footer_scripts(){
+  ?>
+  <style type="text/css">
+  	.new-custom-button:hover{
+  			background-color: #699bf0;
+    		border-color: #699bf0;
+    		color: #000;
+  	}
+  </style>
+  <script>
+  	jQuery(document).ready(function(){
+  		if(jQuery(".course-payment .lp-course-buttons").length == 1)
+  		{
+  			var btnContent = '<a class="btn btn-primary btn-lg new-custom-button" onClick="setCourseModal()" >Enroll Now</a>';
+  			jQuery(".lp-course-buttons").before(btnContent);
+  		}
+  	});
+
+  	function setCourseModal() {
+  		jQuery("#course_modal").modal('show');
+  	}
+
+   </script>
+  <?php
+}
+
+
+
+function modal_wrapper()
+{
+	global $post;
+	$data = get_gcf("course", $single = false, $eval = false);
+	$modal_content =  $data['modal_content'];
+	$course = LP_Course::get_course($post);
+	$external_link = $course->get_external_link();
+
+    $HTML = '';
+    $HTML .= '<div id="course_modal" class="modal fade" tabindex="-1">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button class="close" type="button" data-dismiss="modal">×</button>
+									<h4 class="modal-title">Course policy</h4>
+							</div>
+							<div class="modal-body">'.
+								$modal_content	
+							.'</div>
+							<div class="modal-footer">';
+								if($external_link != '')
+								{
+									$HTML .= '<a href="'.$external_link.'" target="_new">
+										<button class="btn btn-primary new-custom-button" type="button">I agree</button>
+									</a>';
+
+								}
+
+									$HTML .= '<button class="btn btn-default" type="button" data-dismiss="modal">Dis agree</button>
+								</div>
+							</div>
+					</div>
+				</div>';
+    
+    echo $HTML;
+}

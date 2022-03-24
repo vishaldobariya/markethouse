@@ -26,5 +26,7 @@
 </div><!-- end wrapper-container -->
 
 <?php wp_footer(); ?>
+
+hello checking theme.
 </body>
 </html>
